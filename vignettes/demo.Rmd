@@ -22,7 +22,6 @@ vignette: >
 ![](demo3.png){width=150%}
 
 ![](demo4.png){width=150%}
-![](demo5.png){width=150%}
 
 
 
