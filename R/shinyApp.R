@@ -2,7 +2,7 @@
 #'
 #' @author Aëllya & Laurène
 #' @export
-runDemo <- function() {
+shiny_app <- function() {
   # load setup and database
   source(here::here("scripts/setup.R"))
   source(here::here("scripts/database.R"))

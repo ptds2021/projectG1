@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-###  This is the library `projectG1` and it contains the function: **runDemo()**.
+###  This is the library `projectG1` and it contains the function: **shiny_app()**.
 
 ### This function automatically runs our shiny application where you can track covid19 in European countries. The first tab displays a map where you can find the vaccination rate, the covid19 case by country and the deaths. All these metrics can be moved backwards in time with a side bar.
 ![](demo1.png){width=150%}
