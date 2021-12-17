@@ -2,10 +2,86 @@
 #'
 #' @author Aëllya & Laurène
 #' @export
-shiny_app <- function() {
+run_tracker <- function() {
   # load setup and database
-  source(here::here("scripts/setup.R"))
-  source(here::here("scripts/database.R"))
+  # Data collection
+  database <- readr::read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+
+  ## Data cleaning
+
+  # filter European countries from "continent"
+  database_EU <- dplyr::as_tibble(dplyr::filter(database,continent == "Europe"))# 140k obs -> 31k observations remaining
+
+
+  # remove variables that have to many NAs
+  database_EU <-  dplyr::as_tibble(dplyr::filter(
+    dplyr::rename(dplyr::select(dplyr::relocate(
+      dplyr::filter(database_EU,location != "Russia"),
+      c(date, continent),
+      .before = iso_code),
+      -c(weekly_icu_admissions
+         ,weekly_icu_admissions_per_million
+         ,handwashing_facilities
+         ,weekly_hosp_admissions
+         ,weekly_hosp_admissions_per_million
+         ,total_boosters
+         ,total_boosters_per_hundred
+         ,excess_mortality_cumulative_absolute
+         ,excess_mortality_cumulative
+         ,excess_mortality
+         ,excess_mortality_cumulative_per_million
+         ,icu_patients
+         ,icu_patients_per_million
+         ,hosp_patients
+         ,hosp_patients_per_million
+         ,hospital_beds_per_thousand
+         ,extreme_poverty
+         ,tests_per_case
+         ,tests_units)),
+      country_code = iso_code),
+    !is.na(total_cases)))
+
+
+
+  # some negative absurd values in "new_cases", maybe replace them by 0
+  #database_EU$new_cases[database_EU$new_cases < 0] <- 0
+
+
+  # can be useful later on (map?)
+  countries <- base::unique(database_EU$location)
+
+  # dygraph
+  database_EU_dg <- dplyr::select(database_EU,date, location, new_cases_smoothed) #-----------> TO DELETE IF WE DONT USE IT IN SHINY
+
+
+
+  # MAP SUB-DATASETS
+  #-------------------------------------------------------------------------------
+
+  # DISPLAY SETTINGS
+  #-----------------
+
+  colors <- c("tan4", "turquoise4")
+  pal <- leaflet::colorNumeric(palette = "BrBG" ,domain = c(0, 100))
+
+  # COORDINATE DATA
+  #----------------
+  coordinates <- dplyr::mutate_if(dplyr::filter(dplyr::select(readr::read_csv(here::here("inst/map.data/coordinates.csv")),country_code = `Alpha-3 code`,
+                                                              latitude = `Latitude (average)`,
+                                                              longitude = `Longitude (average)`),country_code != "NA"),is.character, as.factor)
+
+  # LAST DATE GLOBAL SUMMARY
+  #-------------------------
+  last_date <- dplyr::summarise(dplyr::group_by(dplyr::filter(database_EU,date == max(date)-7),date),total_cases_EU = sum(total_cases),
+                                total_deaths_EU = sum(total_deaths, na.rm = TRUE),
+                                people_fully_vaccinated_EU = sum(people_fully_vaccinated, na.rm = TRUE))
+
+
+
+
+  source(here::here("R/setup.R"))
+
+
 
   ui <- navbarPage(title = "EU COVID-19 tracker",
 
@@ -13,7 +89,7 @@ shiny_app <- function() {
                    #--------------------------------------------------------------
 
                    tabPanel("Map",
-                            h6("",
+                            htmltools::h6("",
                                leafletOutput("map", height = "790px", width = "100%")),
 
                             #set the background opacity and color of the absolute panel
@@ -31,17 +107,17 @@ shiny_app <- function() {
                                           top = 75, left = 55, width = 300, fixed=TRUE,
                                           draggable = TRUE, height = "auto",
 
-                                          h2("Global Summary", align = "center", style="color:darkcyan"),
-                                          h5(em(textOutput("last_date_title")), align = "center", style="color:darkcyan"),
-                                          h3(textOutput("vacc_count"), align = "right", style="color:saddlebrown"),
-                                          h4(textOutput("case_count"), align = "right", style="color:chocolate"),
-                                          h5(textOutput("death_count"), align = "right", style="color:sandybrown"),
+                                          htmltools::h2("Global Summary", align = "center", style="color:darkcyan"),
+                                          htmltools::h5(em(textOutput("last_date_title")), align = "center", style="color:darkcyan"),
+                                          htmltools::h3(textOutput("vacc_count"), align = "right", style="color:saddlebrown"),
+                                          htmltools::h4(textOutput("case_count"), align = "right", style="color:chocolate"),
+                                          htmltools::h5(textOutput("death_count"), align = "right", style="color:sandybrown"),
                                           #plotOutput("epi_curve", height="130px", width="100%"),
                                           #plotOutput("cumulative_plot", height="130px", width="100%"),
 
                                           setSliderColor(c("darkcyan"), c(1)),
                                           sliderTextInput("plot_date",
-                                                          label = h6("Select mapping date", style="color:darkcyan"),
+                                                          label = htmltools::h6("Select mapping date", style="color:darkcyan"),
                                                           choices = unique(database_EU$date), #, "%d %b %y") #format(
                                                           to_fixed = last_date$date,
                                                           selected = last_date$date, #, "%d %b %y") #format(
@@ -62,8 +138,8 @@ shiny_app <- function() {
 
 
                               fluidRow(column(9, # each row is made of 12 columns. Here we occupy 9 col for the dygraph
-                                              h4(strong("Evolution of New Cases in Europe")),
-                                              h5(em("Smoothed (7-day)")),
+                                              htmltools::h4(strong("Evolution of New Cases in Europe")),
+                                              htmltools::h5(em("Smoothed (7-day)")),
                                               dygraphOutput("plot1")),
 
                                        column(3, # occupy 3 col for the dygraph legend
@@ -84,7 +160,7 @@ shiny_app <- function() {
 
 
                    tabPanel("Comparator",
-                            h4(strong("Countries Comparator")),
+                            htmltools::h4(strong("Countries Comparator")),
 
                             #     plotlyOutput("")
                             selectizeInput(inputId = "country",   # create a drop down list
@@ -107,8 +183,8 @@ shiny_app <- function() {
                    navbarMenu("Menu Options",
                               tabPanel("Menu item A - Summary stats", verbatimTextOutput("summary")),
                               tabPanel("Menu item B - Link to code",
-                                       h4(HTML(paste("We downloaded our DS here", a(href="https://github.com/owid/covid-19-data/raw/master/public/data", "link"), "."))),
-                                       h4(HTML(paste("In case you have questions", a(href="mailto:laurene.hsieh@gmail.com", "email me"), ".")))
+                                       htmltools::h4(HTML(paste("We downloaded our DS here", a(href="https://github.com/owid/covid-19-data/raw/master/public/data", "link"), "."))),
+                                       htmltools::h4(HTML(paste("In case you have questions", a(href="mailto:laurene.hsieh@gmail.com", "email me"), ".")))
 
                               )),
 
@@ -117,7 +193,7 @@ shiny_app <- function() {
                               DT::dataTableOutput("data"))),
 
                    tabPanel("About Page",
-                            h4("This is a project for PTDS 2021 class")
+                            htmltools::h4("This is a project for PTDS 2021 class")
                    )
   )
 
