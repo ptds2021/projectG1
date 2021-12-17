@@ -1,6 +1,9 @@
 #' @title Eu covid19 tracker
 #'
 #' @author Aëllya & Laurène
+#'
+#' @return a shiny app for tracking covid19 in European countries
+#'
 #' @export
 run_tracker <- function() {
   # load setup and database

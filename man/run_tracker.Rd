@@ -6,6 +6,9 @@
 \usage{
 run_tracker()
 }
+\value{
+a shiny app for tracking covid19 in European countries
+}
 \description{
 Eu covid19 tracker
 }
