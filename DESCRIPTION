@@ -18,13 +18,24 @@ Imports:
     htmltools,
     dplyr,
     readr,
-    tidyverse
+    tidyverse,
+    devtools,
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 Suggests: 
     rmarkdown,
+    shinycssloaders,
+    viridis,
+    shinythemes,
+    dygraphs,
+    plotly,
+    shinyWidgets,
+    tibble,
+    tidyr,
+    tsbox,
+    zoo,
     knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
