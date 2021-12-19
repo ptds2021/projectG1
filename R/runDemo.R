@@ -1,6 +1,6 @@
-#' @title Estimate area function
+#' @title Covid-19 tracker
 #'
-#' @author Corinne & Visesa
+#' @author L. Hsieh, A. Monney, R. Tombola
 #' @export
 run_tracker <- function() {
   appDir <- system.file("shiny-examples", "tracker", package = "projectG1")

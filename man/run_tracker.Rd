@@ -2,13 +2,13 @@
 % Please edit documentation in R/runDemo.R
 \name{run_tracker}
 \alias{run_tracker}
-\title{Estimate area function}
+\title{Covid-19 tracker}
 \usage{
 run_tracker()
 }
 \description{
-Estimate area function
+Covid-19 tracker
 }
 \author{
-Corinne & Visesa
+L. Hsieh, A. Monney, R. Tombola
 }
