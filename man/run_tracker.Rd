@@ -10,7 +10,7 @@ run_tracker()
 a shiny app for tracking covid19 in European countries
 }
 \description{
-Eu covid19 tracker
+Function launching the application
 }
 \author{
 Aëllya & Laurène

@@ -1,30 +1,26 @@
 ---
 title: "projectG1"
-author: Aëlly Monney, Rémy Tombola
-date: "`r Sys.time()`"
+author: Aëllya Monney, Rémy Tombola
+date: "2021.12.19"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{demo}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-###  This is the library `projectG1` and it contains the function: **shiny_app()**.
+###  This is the library `projectG1` and it contains the function: `run_tracker()`.
+
+### To access this function you must run the following 3 lines of code in the console:
+```{r, eval=FALSE}
+remotes::install_github("ptds2021/projectG1")
+library(projectG1)
+run_tracker()
+```
 
 ### This function automatically runs our shiny application where you can track covid19 in European countries. The first tab displays a map where you can find the vaccination rate, the covid19 case by country and the deaths. All these metrics can be moved backwards in time with a side bar.
-![](demo1.png){width=150%}
 
-### The second tab provides you with two plots:
-### 1. *Evolution of New Cases in Europe* is a general trend of new covid19 cases in each country. This plot is interactive and you can also go back in time.
-### 2. *Covid-19 Total Cases by European Countries* is a static barplot that displays the total number of            cases form the beginning of the pandemic.
-![](demo2.png){width=150%}
+<center>
 
-### The tab `Comparator` allows you to select individually each country and compare their daily new cases in an interactive plot. In this example France and Germany are compared.
-![](demo3.png){width=150%}
+![](demo1.png){width=100%}
 
-![](demo4.png){width=150%}
-
-
-
-
-
-
+</center>
