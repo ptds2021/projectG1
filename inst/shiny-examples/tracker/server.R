@@ -333,16 +333,17 @@ shinyServer(function(input, output, session) {
                                        '</br><b>Total cases:</b> ', comprss(total_cases),
                                        '</br><b>Date:</b> ', date))) +
         ggplot2::geom_bar(stat = "identity", fill = "dodgerblue4", alpha = 0.8) +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) + #to adjust label axis for better visibility
         ggplot2::scale_y_continuous(labels = scales::label_number_si()) +  # to format total cases numbers into Millions
         xlab("") +
         ylab("Total Cases") +
         ggplot2::ggtitle("") +
+        ggplot2::theme_minimal()+
         ggplot2::theme(legend.position = "none",
                        panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                                 color = "#ffffff00"), # make plot background transparent
                        plot.background = ggplot2::element_rect(fill = "#ffffff00",
-                                                               color = "#ffffff00")),
+                                                               color = "#ffffff00"),
+                       axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)), #to adjust label axis for better visibility),
       tooltip = "text")  #to only have text in the tooltip
 
   }) #renderPlotly
@@ -359,16 +360,17 @@ shinyServer(function(input, output, session) {
                                        '</br><b>Total cases per million:</b> ', scales::comma(total_cases_per_million),
                                        '</br><b>Date:</b> ', date))) +
         ggplot2::geom_bar(stat = "identity", fill = "dodgerblue4", alpha = 0.7) +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
         ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
         xlab("") +
         ylab("Total Cases per Million") +
         ggplot2::ggtitle("") +
+        ggplot2::theme_minimal()+
         ggplot2::theme(legend.position = "none",
                        panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                                 color = "#ffffff00"),   # make plot background transparent
                        plot.background = ggplot2::element_rect(fill = "#ffffff00",
-                                                               color = "#ffffff00")),
+                                                               color = "#ffffff00"),
+                       axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)),
       tooltip = "text")  #to only have text in the tooltip
 
   }) #renderPlotly
@@ -385,16 +387,17 @@ shinyServer(function(input, output, session) {
                                        '</br><b>Total Death:</b> ', scales::comma(total_deaths),
                                        '</br><b>Date:</b> ', date))) +
         ggplot2::geom_bar(stat = "identity", fill = "darkcyan") +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
         ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
         xlab("") +
         ylab("Total Deaths") +
         ggplot2::ggtitle("") +
+        ggplot2::theme_minimal()+
         ggplot2::theme(legend.position = "none",
                        panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                                 color = "#ffffff00"),   # make plot background transparent
                        plot.background = ggplot2::element_rect(fill = "#ffffff00",
-                                                               color = "#ffffff00")),
+                                                               color = "#ffffff00"),
+                       axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)),
       tooltip = "text")  #to only have text in the tooltip
 
   }) #renderPlotly
@@ -411,16 +414,17 @@ shinyServer(function(input, output, session) {
                                        '</br><b>Total Deaths per Million:</b> ', scales::comma(total_deaths_per_million),
                                        '</br><b>Date:</b> ', date))) +
         ggplot2::geom_bar(stat = "identity", fill = "darkcyan") +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
         ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
         xlab("") +
         ylab("Total Deaths per Million") +
         ggplot2::ggtitle("") +
+        ggplot2::theme_minimal()+
         ggplot2::theme(legend.position = "none",
                        panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                                 color = "#ffffff00"),   # make plot background transparent
                        plot.background = ggplot2::element_rect(fill = "#ffffff00",
-                                                               color = "#ffffff00")),
+                                                               color = "#ffffff00"),
+                       axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)),
       tooltip = "text")  #to only have text in the tooltip
 
   }) #renderPlotly
@@ -437,15 +441,16 @@ shinyServer(function(input, output, session) {
                                        '</br><b>Vaccination Rate:</b> ', paste( people_fully_vaccinated_per_hundred, "%"),
                                        '</br><b>Date:</b> ', date))) +
         ggplot2::geom_bar(stat = "identity", fill = "skyblue4") +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1))+
         xlab("") +
         ylab("Vaccination Rate (%)") +
         ggplot2::ggtitle("") +
+        ggplot2::theme_minimal()+
         ggplot2::theme(legend.position = "none",
                        panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                                 color = "#ffffff00"),   # make plot background transparent
                        plot.background = ggplot2::element_rect(fill = "#ffffff00",
-                                                               color = "#ffffff00")),
+                                                               color = "#ffffff00"),
+                       axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)),
       tooltip = "text")  #to only have text in the tooltip
 
   }) #renderPlotly
@@ -472,6 +477,7 @@ shinyServer(function(input, output, session) {
       ylab("Vaccination Rate (%)") +
       xlab("GDP per Capita ($)") +
       ggplot2::labs(color = "Total Cases per Million\n") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                               color = "#ffffff00"),   # make plot background transparent
                      plot.background = ggplot2::element_rect(fill = "#ffffff00",
@@ -526,6 +532,7 @@ shinyServer(function(input, output, session) {
         ggplot2::theme(legend.position = "none") +
         ggplot2::labs(x = "Date",
                       y = "New Cases") +
+        ggplot2::theme_minimal()+
         ggplot2::theme(legend.position = "none",
                        panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                                 color = "#ffffff00"),   # make plot background transparent
@@ -552,6 +559,7 @@ shinyServer(function(input, output, session) {
         ggplot2::scale_colour_manual(values=cbPalette) +
         ggplot2::scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
         ggplot2::theme(legend.position = "none") +
+        ggplot2::theme_minimal()+
         ggplot2::labs(x = "Date",
                       y = "New Cases per Million") +
         ggplot2::theme(legend.position = "none",
@@ -580,6 +588,7 @@ shinyServer(function(input, output, session) {
         ggplot2::scale_colour_manual(values = cbPalette) +
         ggplot2::scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
         ggplot2::theme(legend.position = "none") +
+        ggplot2::theme_minimal()+
         ggplot2::labs(x = "Date",
                       y = "Vaccination Rate (%)") +
         ggplot2::theme(legend.position = "none",
@@ -618,6 +627,7 @@ shinyServer(function(input, output, session) {
       xlab("") +
       ylab("Current Stringency Index") +
       ggplot2::ggtitle("") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(legend.position = "none",
                      panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                               color = "#ffffff00"),   # make plot background transparent
@@ -644,6 +654,7 @@ shinyServer(function(input, output, session) {
       xlab("") +
       ylab("Median Age") +
       ggplot2::ggtitle("") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(legend.position = "none",
                      panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                               color = "#ffffff00"),   # make plot background transparent
@@ -670,6 +681,7 @@ shinyServer(function(input, output, session) {
       xlab("") +
       ylab("New Deaths Smoothed") +
       ggplot2::ggtitle("") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(legend.position = "none",
                      panel.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"),   # make plot background transparent
                      plot.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"))
@@ -696,6 +708,7 @@ shinyServer(function(input, output, session) {
       xlab("") +
       ylab("New Deaths Smoothed per Million") +
       ggplot2::ggtitle("") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(legend.position = "none",
                      panel.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"),   # make plot background transparent
                      plot.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"))
@@ -722,6 +735,7 @@ shinyServer(function(input, output, session) {
       xlab("") +
       ylab("Cardiovascular Death Rate") +
       ggplot2::ggtitle("") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(legend.position = "none",
                      panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                               color = "#ffffff00"),   # make plot background transparent
@@ -747,6 +761,7 @@ shinyServer(function(input, output, session) {
       xlab("") +
       ylab("Diabetes Prevalence") +
       ggplot2::ggtitle("") +
+      ggplot2::theme_minimal()+
       ggplot2::theme(legend.position = "none",
                      panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                               color = "#ffffff00"),   # make plot background transparent
