@@ -10,6 +10,10 @@
 run_tracker <- function() {
 
   devtools::load_all()
+  #-------------------------------------------------------------------------------
+  # DATABASE
+  #-------------------------------------------------------------------------------
+
   # Data collection
   #----------------
   database <- readr::read_csv(("https://covid.ourworldindata.org/data/owid-covid-data.csv"))
@@ -24,7 +28,8 @@ run_tracker <- function() {
                                    "Gibraltar",
                                    "Isle of Man",
                                    "Jersey",
-                                   "Guernsey")) %>% # remove some countries
+                                   "Guernsey",
+                                   "Vatican")) %>% # remove some countries
     dplyr::select(c(date
                     ,iso_code
                     ,location
@@ -131,8 +136,7 @@ run_tracker <- function() {
     "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/se.svg", # Sweden
     "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/ch.svg", # CH
     "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/ua.svg", # Ukraine
-    "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/gb.svg", # UK
-    "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/va.svg" # Vatican
+    "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/gb.svg" # UK
   )
 
   #-----
@@ -171,7 +175,7 @@ run_tracker <- function() {
   recent_date <- format(max(database_EU$date), format = "%B %d %Y")
   recent_date_v <- format(max(database_EU$date - 7), format = "%B %d %Y")
 
-  ui <- shiny::navbarPage(theme = shinytheme("yeti"),
+  ui <- shiny::navbarPage(theme = shinythemes::shinytheme("yeti"),
 
                           #--------------------------------------------------------------
                           # Title
@@ -184,10 +188,10 @@ run_tracker <- function() {
                           #--------------------------------------------------------------
 
                           shiny::tabPanel("Map", # tab title
-                                          div(class="outer",
+                                          htmltools::div(class="outer",
                                               tags$head(
                                                 # Include our custom CSS
-                                                includeCSS("inst/styles.css")
+                                                htmltools::includeCSS("inst/styles.css")
                                               ),
                                               # Map
                                               leaflet::leafletOutput("map",
@@ -218,7 +222,7 @@ run_tracker <- function() {
                                                 height = "auto",
                                                 # Absolute Panel content
                                                 htmltools::h2("Global Summary", align = "left", style="color:gray29"),
-                                                htmltools::h5(em(shiny::textOutput("clean_date_reactive")), align = "center"),
+                                                htmltools::h5(htmltools::em(shiny::textOutput("clean_date_reactive")), align = "center"),
                                                 htmltools::h3(shiny::textOutput("case_count"), align = "right", style="color:saddlebrown"),
                                                 htmltools::h4(shiny::textOutput("vacc_count"), align = "right", style="color:chocolate"),
                                                 htmltools::h5(shiny::textOutput("death_count"), align = "right", style="color:#ef7a17"),
@@ -229,7 +233,7 @@ run_tracker <- function() {
                                                                               choices = available_dates$date, #, "%d %b %y") #format(
                                                                               selected = max(available_dates$date), #, "%d %b %y") #format(
                                                                               grid = FALSE,
-                                                                              animate = animationOptions(interval = 2000, loop = FALSE))
+                                                                              animate = shiny::animationOptions(interval = 2000, loop = FALSE))
                                               )#absolutePanel
                                           )#div
                           ),#tabPanel Map
@@ -245,15 +249,15 @@ run_tracker <- function() {
                                             #-------------------------------------------------------
 
                                             shiny::tabPanel("General Trend",
-                                                            htmltools::h3(strong("European COVID-19 General Trend")),
+                                                            htmltools::h3(htmltools::strong("European COVID-19 General Trend")),
                                                             shiny::wellPanel(
 
 
                                                               # NEW CASES PLOT
 
                                                               shiny::fluidRow(shiny::column(9, # each row is made of 12 columns. Here we occupy 9 col for the dygraph
-                                                                                            htmltools::h4(strong("Evolution of New Cases in Europe")),
-                                                                                            htmltools::h5(em("7-day rolling average")),
+                                                                                            htmltools::h4(htmltools::strong("Evolution of New Cases in Europe")),
+                                                                                            htmltools::h5(htmltools::em("7-day rolling average")),
                                                                                             dygraphs::dygraphOutput("dygraph") %>%
                                                                                               shinycssloaders::withSpinner(color="#0dc5c1")), # add busy icon while downloading
                                                                               shiny::column(3, # occupy 3 col for the dygraph legend
@@ -261,8 +265,8 @@ run_tracker <- function() {
                                                                                             shiny::br(),
                                                                                             shiny::br(),
                                                                                             shiny::br(),
-                                                                                            p(strong("Note:")),
-                                                                                            p("New COVID-19 cases per day were smoothed with a 7-day rolling average.
+                                                                                            htmltools::p(htmltools::strong("Note:")),
+                                                                                            htmltools::p("New COVID-19 cases per day were smoothed with a 7-day rolling average.
                                                           This means that the values for each day were computed by averaging the
                                                           values of this day and the six days before.",
                                                                                               style = "font-family: 'arial'; font-si18pt"))), # to have legend of dygraph on the right
@@ -275,8 +279,8 @@ run_tracker <- function() {
                                                               # TOTAL CASES PLOT
 
                                                               shiny::fluidRow(shiny::column(9, # put barplot in an other row to prevent plots overlaying
-                                                                                            htmltools::h4(strong("Total Cases by European Countries")),
-                                                                                            htmltools::h5(em(paste("On", recent_date))),
+                                                                                            htmltools::h4(htmltools::strong("Total Cases by European Countries")),
+                                                                                            htmltools::h5(htmltools::em(paste("On", recent_date))),
                                                                                             shiny::tabsetPanel(type = "tabs", #Put plots in tabs
                                                                                                                shiny::tabPanel("Total Cases",
                                                                                                                                plotly::plotlyOutput("barplot_cases")),
@@ -289,8 +293,8 @@ run_tracker <- function() {
                                                                               shiny::br(),
                                                                               shiny::br(),
                                                                               shiny::column(3, # occupy 3 col for the dygraph legend
-                                                                                            p(strong("Note:")),
-                                                                                            p("Viewing the data per million people will reorder
+                                                                                            htmltools::p(htmltools::strong("Note:")),
+                                                                                            htmltools::p("Viewing the data per million people will reorder
                                                           the countries relative to one another. Indeed, the
                                                           biggest countries will no longer be the most affected
                                                           after adjusting the size of the populations in the countries",
@@ -300,8 +304,8 @@ run_tracker <- function() {
                                                               # TOTAL DEATHS PLOT
 
                                                               shiny::fluidRow(shiny::column(9,
-                                                                                            htmltools::h4(strong("Total Deaths by European Countries")),
-                                                                                            htmltools::h5(em(paste("On", recent_date))),
+                                                                                            htmltools::h4(htmltools::strong("Total Deaths by European Countries")),
+                                                                                            htmltools::h5(htmltools::em(paste("On", recent_date))),
                                                                                             shiny::tabsetPanel(type = "tabs",
                                                                                                                shiny::tabPanel("Total Deaths",
                                                                                                                                plotly::plotlyOutput("barplot_deaths")),
@@ -313,16 +317,16 @@ run_tracker <- function() {
                                                               # VACCINATION PLOT
 
                                                               shiny::fluidRow(shiny::column(9,
-                                                                                            htmltools::h4(strong("Vaccination Rate by European Countries")),
-                                                                                            htmltools::h5(em(paste("On", recent_date))),
+                                                                                            htmltools::h4(htmltools::strong("Vaccination Rate by European Countries")),
+                                                                                            htmltools::h5(htmltools::em(paste("On", recent_date))),
                                                                                             plotly::plotlyOutput("barplot_vaccines")
                                                               )),#column & fluidRow
 
                                                               # BUBBLE PLOT
 
                                                               shiny::fluidRow(shiny::column(9,
-                                                                                            htmltools::h4(strong("Bubble Chart and COVID-19 Total Cases per Million")),
-                                                                                            htmltools::h5(em(paste("On", recent_date))),  # to display most recent_date
+                                                                                            htmltools::h4(htmltools::strong("Bubble Chart and COVID-19 Total Cases per Million")),
+                                                                                            htmltools::h5(htmltools::em(paste("On", recent_date))),  # to display most recent_date
                                                                                             plotly::plotlyOutput("bubble")),
                                                                               shiny::column(3, # occupy 3 col for the dygraph legend
                                                                                             shiny::br(), #add some space between plots
@@ -334,8 +338,8 @@ run_tracker <- function() {
                                                                                             shiny::br(),
                                                                                             shiny::br(),
                                                                                             shiny::br(),
-                                                                                            p(strong("Note:")),
-                                                                                            p("The circles diameter, such as the color, is proportional to the Total
+                                                                                            htmltools::p(htmltools::strong("Note:")),
+                                                                                            htmltools::p("The circles diameter, such as the color, is proportional to the Total
                                                           Cases Per Millions in the different countries.",
                                                                                               style = "font-family: 'arial'; font-si18pt")
                                                                               ))#column & fluidRow
@@ -347,13 +351,13 @@ run_tracker <- function() {
                                             #-------------------------------------------------------
 
                                             shiny::tabPanel("Comparator",
-                                                            htmltools::h3(strong("Countries Comparator")),
+                                                            htmltools::h3(htmltools::strong("Countries Comparator")),
                                                             shiny::wellPanel(
 
 
                                                               # COUNTRIES PICKER
 
-                                                              htmltools::h5(strong("Select up to 5 countries")),
+                                                              htmltools::h5(htmltools::strong("Select up to 5 countries")),
                                                               shinyWidgets::pickerInput(inputId = "country",   # create a drop down list
                                                                                         selected = "Switzerland",
                                                                                         choices = levels(as.factor(database_EU$location)),
@@ -363,7 +367,7 @@ run_tracker <- function() {
                                                                                                             mapply(countries,
                                                                                                                    flags,
                                                                                                                    FUN = function(country, flagUrl) {
-                                                                                                                     HTML(paste(
+                                                                                                                     htmltools::HTML(paste(
                                                                                                                        tags$img(src=flagUrl,
                                                                                                                                 width=20,
                                                                                                                                 height=15),
@@ -385,8 +389,8 @@ run_tracker <- function() {
                                                               # NEW CASES PLOT
 
                                                               shiny::fluidRow(shiny::column(9, # each row is made of 12 columns. Here we occupy 9 col for the dygraph
-                                                                                            htmltools::h4(strong("New COVID-19 Cases by Day")),
-                                                                                            htmltools::h5(em("7-day rolling average")),
+                                                                                            htmltools::h4(htmltools::strong("New COVID-19 Cases by Day")),
+                                                                                            htmltools::h5(htmltools::em("7-day rolling average")),
                                                                                             shiny::tabsetPanel(type = "tabs",
                                                                                                                shiny::tabPanel("New Cases",
                                                                                                                                plotly::plotlyOutput("comparator_1") %>%
@@ -401,8 +405,8 @@ run_tracker <- function() {
                                                                             shiny::br(),
                                                                             shiny::br(),
                                                                             shiny::br(),
-                                                                            p(strong("Note:")),
-                                                                            p("New COVID-19 Cases by Day and Vaccination Rate by Day were smoothed with
+                                                                            htmltools::p(htmltools::strong("Note:")),
+                                                                            htmltools::p("New COVID-19 Cases by Day and Vaccination Rate by Day were smoothed with
                                                           a 7-day rolling average.This means that the values for each day were
                                                           computed by averaging the values of this day and the six days before.",
                                                                               style = "font-family: 'arial'; font-si18pt"))),
@@ -411,13 +415,13 @@ run_tracker <- function() {
                                                               # VACCINATION PLOT
 
                                                               shiny::fluidRow(shiny::column(9, # each row is made of 12 columns. Here we occupy 9 col for the dygraph
-                                                                                            htmltools::h4(strong("Vaccination Rate by Day")),
-                                                                                            htmltools::h5(em("7-day rolling average")),
+                                                                                            htmltools::h4(htmltools::strong("Vaccination Rate by Day")),
+                                                                                            htmltools::h5(htmltools::em("7-day rolling average")),
                                                                                             plotly::plotlyOutput("comparator_2") %>%
                                                                                               shinycssloaders::withSpinner(color="#0dc5c1"))),
 
                                                               # DEATHS & DEMOGRAPHIC PLOTS
-                                                              htmltools::h4(strong("Deaths and Demographic Features")),
+                                                              htmltools::h4(htmltools::strong("Deaths and Demographic Features")),
                                                               shiny::fluidRow(shiny::column(6,
                                                                                             # New deaths plots in panel
                                                                                             shiny::tabsetPanel(type = "tabs",
@@ -433,8 +437,8 @@ run_tracker <- function() {
                                                                                                shiny::tabPanel("Stringency",
                                                                                                                plotly::plotlyOutput("comparator_barplot_si") %>%
                                                                                                                  shinycssloaders::withSpinner(color="#0dc5c1"),
-                                                                                                               htmltools::h6(em("Stringency Index:")),
-                                                                                                               htmltools::h6(em("A composite measure based on 9
+                                                                                                               htmltools::h6(htmltools::em("Stringency Index:")),
+                                                                                                               htmltools::h6(htmltools::em("A composite measure based on 9
                                                                                                       response indicators including
                                                                                                       school closures, workplace
                                                                                                       closures, and travel bans,
@@ -443,22 +447,22 @@ run_tracker <- function() {
                                                                                                shiny::tabPanel("Median Age",
                                                                                                                plotly::plotlyOutput("comparator_barplot_median_age") %>%
                                                                                                                  shinycssloaders::withSpinner(color="#0dc5c1"),
-                                                                                                               htmltools::h6(em("Median Age:")),
-                                                                                                               htmltools::h6(em("United Nations projection for
+                                                                                                               htmltools::h6(htmltools::em("Median Age:")),
+                                                                                                               htmltools::h6(htmltools::em("United Nations projection for
                                                                                                      2020 median age of the
                                                                                                      population"))),
                                                                                                shiny::tabPanel("Cardiovasc. Deaths",
                                                                                                                plotly::plotlyOutput("comparator_barplot_cardio") %>%
                                                                                                                  shinycssloaders::withSpinner(color="#0dc5c1"),
-                                                                                                               htmltools::h6(em("Cardiovascular Death Rate:")),
-                                                                                                               htmltools::h6(em("Death rate from cardiovascular
+                                                                                                               htmltools::h6(htmltools::em("Cardiovascular Death Rate:")),
+                                                                                                               htmltools::h6(htmltools::em("Death rate from cardiovascular
                                                                                                      disease in 2017 (annual number
                                                                                                      of deaths per 100'000 people)"))),
                                                                                                shiny::tabPanel("Diabete Prev.",
                                                                                                                plotly::plotlyOutput("comparator_barplot_diabetes") %>%
                                                                                                                  shinycssloaders::withSpinner(color="#0dc5c1"),
-                                                                                                               htmltools::h6(em("Diabetes Prevalence:")),
-                                                                                                               htmltools::h6(em("Diabetes prevalence (% of
+                                                                                                               htmltools::h6(htmltools::em("Diabetes Prevalence:")),
+                                                                                                               htmltools::h6(htmltools::em("Diabetes prevalence (% of
                                                                                                      population aged 20 to 79) in 2017")))
                                                                             ) #tabsetpanel
                                                               )#column
@@ -472,7 +476,7 @@ run_tracker <- function() {
                           #--------------------------------------------------------------
 
                           shiny::tabPanel("Data set",
-                                          shiny::titlePanel(strong("Data")),
+                                          shiny::titlePanel(htmltools::strong("Data")),
                                           shiny::wellPanel(
                                             DT::dataTableOutput("data") %>%
                                               shinycssloaders::withSpinner(color="#0dc5c1"))
@@ -493,15 +497,15 @@ run_tracker <- function() {
                                         left:10px;
                                         bottom: 10px
                                        }"),
-                                          div(class="topimg",img(src="assets/about3.png", # add top image
+                                          htmltools::div(class="topimg",htmltools::img(src="assets/about3.png", # add top image
                                                                  height="100%",
                                                                  width="100%")),
-                                          shiny::titlePanel(strong("About This App")),
+                                          shiny::titlePanel(htmltools::strong("About This App")),
                                           shiny::sidebarLayout(
                                             shiny::sidebarPanel(
                                               width = 3,
                                               htmltools::h3("Why?"),
-                                              htmltools::h5(em("The COVID-19 pandemic has been striking since the
+                                              htmltools::h5(htmltools::em("The COVID-19 pandemic has been striking since the
                                                  beginning of 2020 and has heavily affected all areas
                                                  of social and economic activity around the world. The
                                                  crisis is not over and is currently reshaping our
@@ -528,27 +532,27 @@ run_tracker <- function() {
                                               dashboard (portal) to display massive data, the R Shiny environment provides a platform
                                               for end-users to interact and visualize the data according to their needs."),
                                               htmltools::h3("Data Source"),
-                                              htmltools::h5(HTML(paste("Our data comes from",
-                                                                       a(href="https://github.com/owid/covid-19-data/raw/master/public/data",
+                                              htmltools::h5(htmltools::HTML(paste("Our data comes from",
+                                                                       htmltools::a(href="https://github.com/owid/covid-19-data/raw/master/public/data",
                                                                          "Our World in Data GitHub."),
                                                                        "The data is updated daily."))),
                                               htmltools::h3("Codes"),
-                                              htmltools::h5(HTML(paste("Code and input data used to generate this Shiny mapping tool are available",
-                                                                       a(href="https://github.com/ptds2021/projectG1 on","Github"),"."))),
+                                              htmltools::h5(htmltools::HTML(paste("Code and input data used to generate this Shiny mapping tool are available",
+                                                                       htmltools::a(href="https://github.com/ptds2021/projectG1 on","Github"),"."))),
                                               htmltools::h3("Authors"),
-                                              tags$li(HTML(paste("Laurene Hsieh, MSc in Management and Business Analytics,",
-                                                                 a(href="mailto:laurene.hsieh@unil.ch", "laurene.hsieh@unil.ch")))),
-                                              tags$li(HTML(paste("Visesa Jain, MSc in Management,",
-                                                                 a(href="mailto:visesa.jain@unil.ch", "visesa.jain@unil.ch")))),
-                                              tags$li(HTML(paste("Aellya Monney, MSc in Management and Business Analytics,",
-                                                                 a(href="mailto:aellya.monney@unil.ch", "aellya.monney@unil.ch")))),
-                                              tags$li(HTML(paste("Corinne Schonholzer, MSc in Accounting, Control and Finance,",
-                                                                 a(href="mailto:corinne.schonholzer@unil.ch", "corinne.schonholzer@unil.ch")))),
-                                              tags$li(HTML(paste("Remy Tombola, MSc in Management and Business Analytics,",
-                                                                 a(href="mailto:remy.tombola@unil.ch", "remy.tombola@unil.ch")))),
+                                              tags$li(htmltools::HTML(paste("Laurene Hsieh, MSc in Management and Business Analytics,",
+                                                                 htmltools::a(href="mailto:laurene.hsieh@unil.ch", "laurene.hsieh@unil.ch")))),
+                                              tags$li(htmltools::HTML(paste("Visesa Jain, MSc in Management,",
+                                                                 htmltools::a(href="mailto:visesa.jain@unil.ch", "visesa.jain@unil.ch")))),
+                                              tags$li(htmltools::HTML(paste("Aellya Monney, MSc in Management and Business Analytics,",
+                                                                 htmltools::a(href="mailto:aellya.monney@unil.ch", "aellya.monney@unil.ch")))),
+                                              tags$li(htmltools::HTML(paste("Corinne Schonholzer, MSc in Accounting, Control and Finance,",
+                                                                 htmltools::a(href="mailto:corinne.schonholzer@unil.ch", "corinne.schonholzer@unil.ch")))),
+                                              tags$li(htmltools::HTML(paste("Remy Tombola, MSc in Management and Business Analytics,",
+                                                                 htmltools::a(href="mailto:remy.tombola@unil.ch", "remy.tombola@unil.ch")))),
                                               shiny::br(),
                                               shiny::br(),
-                                              div(class=".logo",img(src="assets/logohec.png",    # HEC logo
+                                              htmltools::div(class=".logo",htmltools::img(src="assets/logohec.png",    # HEC logo
                                                                     height="20%",
                                                                     width="20%"))
                                             ) #sidebarPanel
@@ -568,7 +572,7 @@ run_tracker <- function() {
     #-----------------------------------------------------------------------------
 
     # for display date under the title Global Summary
-    formatted_date <- reactive({
+    formatted_date <- shiny::reactive({
 
       as.POSIXct(input$plot_date)
 
@@ -579,7 +583,7 @@ run_tracker <- function() {
     })
 
     # reactive_db to input$plot_date for Global summary
-    reactive_db <- reactive({
+    reactive_db <- shiny::reactive({
 
       database_EU %>%
         dplyr::filter(date == formatted_date()) %>%
@@ -626,7 +630,7 @@ run_tracker <- function() {
                       ,`people_fully_vaccinated_per_hundred`
                       ,`new_vaccinations`) %>% #select the var of interest
         #create the var for with the pop-up info
-        dplyr::mutate(popup_info = paste(strong(toupper(`location`)), "<br/>",
+        dplyr::mutate(popup_info = paste(htmltools::strong(toupper(`location`)), "<br/>",
                                          "<B>New cases </B>", my_comma(`new_cases`), "<br/>",
                                          "<B>Total cases </B> ", my_comma(`total_cases`), "<br/>",
                                          "<B>New deaths</B> ", my_comma(`new_deaths`), "<br/>",
@@ -652,7 +656,7 @@ run_tracker <- function() {
                            data = map_data$people_fully_vaccinated_per_hundred,
                            title = "Fully Vaccinated <br/> Population",
                            opacity = 0.7,
-                           labFormat = labelFormat(suffix = " %"))
+                           labFormat = leaflet::labelFormat(suffix = " %"))
 
     }) #renderLeaflet
 
@@ -665,7 +669,7 @@ run_tracker <- function() {
       database_EU %>%
         dplyr::relocate(people_fully_vaccinated_per_hundred_MA,
                         .after = people_fully_vaccinated_per_hundred) %>%
-        datatable(rownames = FALSE, # remove index column
+        DT::datatable(rownames = FALSE, # remove index column
                   filter = 'top', # add filter for all the variables
                   options = list(scrollX = TRUE, # to scroll horizontally from left to right
                                  autoWidth = TRUE,
@@ -688,7 +692,7 @@ run_tracker <- function() {
                          xlab = "Date",
                          ylab = "New Cases")  %>%
         dygraphs::dyRoller(rollPeriod = 1, showRoller = T) %>%
-        dygraphs::dyRangeSelector(fillColor = rgb(0.85,0.85,0.93,0.8)) %>%
+        dygraphs::dyRangeSelector(fillColor = grDevices::rgb(0.85,0.85,0.93,0.8)) %>%
         dygraphs::dyHighlight(highlightCircleSize = 5) %>%
         dygraphs::dySeries(color = "darkcyan") %>%
         dygraphs::dyOptions(fillGraph = TRUE # fill area
@@ -698,7 +702,7 @@ run_tracker <- function() {
 
 
     # REACTIVE DATASET for barplots
-    data1 <- reactive({
+    data1 <- shiny::reactive({
 
       database_EU %>%
         dplyr::group_by(location) %>%
@@ -711,22 +715,22 @@ run_tracker <- function() {
     output$barplot_cases <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data1(),
-               aes(x = reorder(location, -total_cases),  # order bar plot by total cases
+        ggplot2::ggplot(data1(),
+               aes(x = stats::reorder(location, -total_cases),  # order bar plot by total cases
                    y = total_cases,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>Total cases:</b> ', comprss(total_cases),
                                 '</br><b>Date:</b> ', date))) +
-          geom_bar(stat = "identity", fill = "dodgerblue4", alpha = 0.8) +
-          theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) + #to adjust label axis for better visibility
-          scale_y_continuous(labels = scales::label_number_si()) +  # to format total cases numbers into Millions
+          ggplot2::geom_bar(stat = "identity", fill = "dodgerblue4", alpha = 0.8) +
+          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) + #to adjust label axis for better visibility
+          ggplot2::scale_y_continuous(labels = scales::label_number_si()) +  # to format total cases numbers into Millions
           xlab("") +
           ylab("Total Cases") +
-          ggtitle("") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::ggtitle("") +
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"), # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00")),
         tooltip = "text")  #to only have text in the tooltip
 
@@ -737,22 +741,22 @@ run_tracker <- function() {
     output$barplot_cases_m <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data1(),
-               aes(x = reorder(location, -total_cases_per_million), # order bar plot by total cases
+        ggplot2::ggplot(data1(),
+               aes(x = stats::reorder(location, -total_cases_per_million), # order bar plot by total cases
                    y = total_cases_per_million,
                    text = paste('</br><b>Country:</b> ', location,
-                                '</br><b>Total cases per million:</b> ', comma(total_cases_per_million),
+                                '</br><b>Total cases per million:</b> ', scales::comma(total_cases_per_million),
                                 '</br><b>Date:</b> ', date))) +
-          geom_bar(stat = "identity", fill = "dodgerblue4", alpha = 0.7) +
-          theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
-          scale_y_continuous(labels = scales::label_number_si()) +
+          ggplot2::geom_bar(stat = "identity", fill = "dodgerblue4", alpha = 0.7) +
+          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
+          ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
           xlab("") +
           ylab("Total Cases per Million") +
-          ggtitle("") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::ggtitle("") +
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00")),
         tooltip = "text")  #to only have text in the tooltip
 
@@ -763,22 +767,22 @@ run_tracker <- function() {
     output$barplot_deaths <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data1(),
-               aes(x = reorder(location, -total_deaths), # order bar plot by total vacc
+        ggplot2::ggplot(data1(),
+               aes(x = stats::reorder(location, -total_deaths), # order bar plot by total vacc
                    y = total_deaths,
                    text = paste('</br><b>Country:</b> ', location,
-                                '</br><b>Total Death:</b> ', comma(total_deaths),
+                                '</br><b>Total Death:</b> ', scales::comma(total_deaths),
                                 '</br><b>Date:</b> ', date))) +
-          geom_bar(stat = "identity", fill = "darkcyan") +
-          theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
-          scale_y_continuous(labels = scales::label_number_si()) +
+          ggplot2::geom_bar(stat = "identity", fill = "darkcyan") +
+          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
+          ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
           xlab("") +
           ylab("Total Deaths") +
-          ggtitle("") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::ggtitle("") +
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00")),
         tooltip = "text")  #to only have text in the tooltip
 
@@ -789,22 +793,22 @@ run_tracker <- function() {
     output$barplot_deaths_m <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data1(),
-               aes(x = reorder(location, -total_deaths_per_million), # order bar plot by total vacc
+        ggplot2::ggplot(data1(),
+               aes(x = stats::reorder(location, -total_deaths_per_million), # order bar plot by total vacc
                    y = total_deaths_per_million,
                    text = paste('</br><b>Country:</b> ', location,
-                                '</br><b>Total Deaths per Million:</b> ', comma(total_deaths_per_million),
+                                '</br><b>Total Deaths per Million:</b> ', scales::comma(total_deaths_per_million),
                                 '</br><b>Date:</b> ', date))) +
-          geom_bar(stat = "identity", fill = "darkcyan") +
-          theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
-          scale_y_continuous(labels = scales::label_number_si()) +
+          ggplot2::geom_bar(stat = "identity", fill = "darkcyan") +
+          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
+          ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
           xlab("") +
           ylab("Total Deaths per Million") +
-          ggtitle("") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::ggtitle("") +
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00")),
         tooltip = "text")  #to only have text in the tooltip
 
@@ -815,21 +819,21 @@ run_tracker <- function() {
     output$barplot_vaccines <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data1(),
-               aes(x = reorder(location, -people_fully_vaccinated_per_hundred), # order bar plot by total vacc
+        ggplot2::ggplot(data1(),
+               aes(x = stats::reorder(location, -people_fully_vaccinated_per_hundred), # order bar plot by total vacc
                    y = people_fully_vaccinated_per_hundred,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>Vaccination Rate:</b> ', paste( people_fully_vaccinated_per_hundred, "%"),
                                 '</br><b>Date:</b> ', date))) +
-          geom_bar(stat = "identity", fill = "skyblue4") +
-          theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+          ggplot2::geom_bar(stat = "identity", fill = "skyblue4") +
+          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1))+
           xlab("") +
           ylab("Vaccination Rate (%)") +
-          ggtitle("") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::ggtitle("") +
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00")),
         tooltip = "text")  #to only have text in the tooltip
 
@@ -838,31 +842,31 @@ run_tracker <- function() {
     # BUBBLE PLOT
     output$bubble <- plotly::renderPlotly({
 
-      p1 <- ggplot(data1(),   # use filtered data on most recent date
+      p1 <- ggplot2::ggplot(data1(),   # use filtered data on most recent date
                    aes(x = gdp_per_capita,
                        y = people_fully_vaccinated_per_hundred,
                        size = total_cases_per_million, #population
                        color = total_cases_per_million,
                        text = paste('</br><b>Country:</b> ', location,
-                                    '</br><b>Total Cases per Million:</b> ', comma(round(total_cases_per_million)),
+                                    '</br><b>Total Cases per Million:</b> ', scales::comma(round(total_cases_per_million)),
                                     '</br><b>Vaccination Rate:</b> ', paste(people_fully_vaccinated_per_hundred,"%"),
-                                    '</br><b>Population:</b> ', comma(population),
-                                    '</br><b>GDP per Capita:</b> ', paste(comma(gdp_per_capita),"$")))) +
-        geom_point(alpha = 0.8) +
-        scale_size(range = c(.1, 10), name ="Population (M)")  +
-        scale_color_viridis(alpha = 0.6,
+                                    '</br><b>Population:</b> ', scales::comma(population),
+                                    '</br><b>GDP per Capita:</b> ', paste(scales::comma(gdp_per_capita),"$")))) +
+        ggplot2::geom_point(alpha = 0.8) +
+        ggplot2::scale_size(range = c(.1, 10), name ="Population (M)")  +
+        viridis::scale_color_viridis(alpha = 0.6,
                             option="viridis",
                             label = scales::comma) +
-        scale_x_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
+        ggplot2::scale_x_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
         ylab("Vaccination Rate (%)") +
         xlab("GDP per Capita ($)") +
-        labs(color = "Total Cases per Million\n") +
-        theme(panel.background = element_rect(fill = "#ffffff00",
+        ggplot2::labs(color = "Total Cases per Million\n") +
+        ggplot2::theme(panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                               color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00",
+              plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                              color = "#ffffff00"))
       plotly::ggplotly(p1, tooltip = "text") %>%
-        layout(xaxis = list(autorange = TRUE),
+        plotly::layout(xaxis = list(autorange = TRUE),
                yaxis = list(autorange = TRUE))
 
     })  #renderPlotly
@@ -880,9 +884,9 @@ run_tracker <- function() {
 
 
     # REACTIVE DATA TO SELECTED COUNTRIES
-    data2 <- reactive({
+    data2 <- shiny::reactive({
 
-      req(input$country)
+      shiny::req(input$country)
       database_EU %>%
         dplyr::filter(location %in% input$country) # filter the location selected by the user
 
@@ -897,7 +901,7 @@ run_tracker <- function() {
     output$comparator_1 <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data2(),
+        ggplot2::ggplot(data2(),
                aes(x = date,
                    y = new_cases_smoothed,
                    color = location,
@@ -905,16 +909,16 @@ run_tracker <- function() {
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>New cases (smoothed):</b> ', comprss(new_cases_smoothed),
                                 '</br><b>Date:</b> ', date))) +
-          geom_line() +
-          scale_colour_manual(values=cbPalette) +
-          scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
-          theme(legend.position = "none") +
-          labs(x = "Date",
+          ggplot2::geom_line() +
+          ggplot2::scale_colour_manual(values=cbPalette) +
+          ggplot2::scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
+          ggplot2::theme(legend.position = "none") +
+          ggplot2::labs(x = "Date",
                y = "New Cases") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00"))
         ,tooltip = "text")
 
@@ -925,24 +929,24 @@ run_tracker <- function() {
     output$comparator_1bis <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data2(),
+        ggplot2::ggplot(data2(),
                aes(x = date,
                    y = new_cases_smoothed_per_million,
                    color = location,
                    group = 1,
                    text = paste('</br><b>Country:</b> ', location,
-                                '</br><b>New cases per million (smoothed):</b> ', comma(new_cases_smoothed_per_million,2),
+                                '</br><b>New cases per million (smoothed):</b> ', scales::comma(new_cases_smoothed_per_million,2),
                                 '</br><b>Date:</b> ', date))) +
-          geom_line() +
-          scale_colour_manual(values=cbPalette) +
-          scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
-          theme(legend.position = "none") +
-          labs(x = "Date",
+          ggplot2::geom_line() +
+          ggplot2::scale_colour_manual(values=cbPalette) +
+          ggplot2::scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
+          ggplot2::theme(legend.position = "none") +
+          ggplot2::labs(x = "Date",
                y = "New Cases per Million") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00")),
         tooltip = "text")
 
@@ -953,7 +957,7 @@ run_tracker <- function() {
     output$comparator_2 <- plotly::renderPlotly({
 
       plotly::ggplotly(
-        ggplot(data2(),
+        ggplot2::ggplot(data2(),
                aes(x = date,
                    y = people_fully_vaccinated_per_hundred_MA,
                    color = location,
@@ -961,25 +965,25 @@ run_tracker <- function() {
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>Vaccination Rate:</b> ', paste(comprss(people_fully_vaccinated_per_hundred_MA), "%"),
                                 '</br><b>Date:</b> ', date))) +
-          geom_line(na.rm = TRUE) +
-          scale_colour_manual(values = cbPalette) +
-          scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
-          theme(legend.position = "none") +
-          labs(x = "Date",
+          ggplot2::geom_line(na.rm = TRUE) +
+          ggplot2::scale_colour_manual(values = cbPalette) +
+          ggplot2::scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
+          ggplot2::theme(legend.position = "none") +
+          ggplot2::labs(x = "Date",
                y = "Vaccination Rate (%)") +
-          theme(legend.position = "none",
-                panel.background = element_rect(fill = "#ffffff00",
+          ggplot2::theme(legend.position = "none",
+                panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                                 color = "#ffffff00"),   # make plot background transparent
-                plot.background = element_rect(fill = "#ffffff00",
+                plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                                color = "#ffffff00"))
         ,tooltip = "text")
 
     }) #renderPlotly
 
     # REACTIVE DATASET FOR BARPLOT COMPARATOR
-    data3 <- reactive({
+    data3 <- shiny::reactive({
 
-      req(input$country)
+      shiny::req(input$country)
 
       database_EU %>%
         dplyr::group_by(location) %>%
@@ -992,21 +996,21 @@ run_tracker <- function() {
     output$comparator_barplot_si <- plotly::renderPlotly({
 
       p <-  data3() %>%
-        ggplot(aes(x = reorder(location, -stringency_index), # reorder barplots
+        ggplot2::ggplot(aes(x = stats::reorder(location, -stringency_index), # reorder barplots
                    y = stringency_index,
                    fill = input$country,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>Stringency index:</b> ', stringency_index,
                                 '</br><b>Date:</b> ', date))) +
-        geom_bar(stat = "identity", width = 0.5) +
-        scale_fill_manual(values=cbPalette) +
+        ggplot2::geom_bar(stat = "identity", width = 0.5) +
+        ggplot2::scale_fill_manual(values=cbPalette) +
         xlab("") +
         ylab("Current Stringency Index") +
-        ggtitle("") +
-        theme(legend.position = "none",
-              panel.background = element_rect(fill = "#ffffff00",
+        ggplot2::ggtitle("") +
+        ggplot2::theme(legend.position = "none",
+              panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                               color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00",
+              plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                              color = "#ffffff00"))
 
       p %>% plotly::ggplotly(tooltip = "text")
@@ -1018,21 +1022,21 @@ run_tracker <- function() {
     output$comparator_barplot_median_age <- plotly::renderPlotly({
 
       p2 <-  data3() %>%
-        ggplot(aes(x = reorder(location, -median_age), # order bar plot by total vacc
+        ggplot2::ggplot(aes(x = stats::reorder(location, -median_age), # order bar plot by total vacc
                    y = median_age,
                    fill = input$country,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>Median Age:</b> ', median_age,
                                 '</br><b>Date:</b> ', date))) +
-        geom_bar(stat = "identity", width = 0.5) +
-        scale_fill_manual(values=cbPalette) +
+        ggplot2::geom_bar(stat = "identity", width = 0.5) +
+        ggplot2::scale_fill_manual(values=cbPalette) +
         xlab("") +
         ylab("Median Age") +
-        ggtitle("") +
-        theme(legend.position = "none",
-              panel.background = element_rect(fill = "#ffffff00",
+        ggplot2::ggtitle("") +
+        ggplot2::theme(legend.position = "none",
+              panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                               color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00",
+              plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                              color = "#ffffff00"))
 
       p2 %>% plotly::ggplotly(tooltip = "text")
@@ -1044,20 +1048,20 @@ run_tracker <- function() {
     output$comparator_barplot_death <- plotly::renderPlotly({
 
       p3 <-  data3() %>%
-        ggplot(aes(x = reorder(location, -new_deaths_smoothed), # order bar plot by total vacc
+        ggplot2::ggplot(aes(x = stats::reorder(location, -new_deaths_smoothed), # order bar plot by total vacc
                    y = new_deaths_smoothed,
                    fill = input$country,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>New deaths smoothed:</b> ', new_deaths_smoothed,
                                 '</br><b>Date:</b> ', date))) +
-        geom_bar(stat = "identity", width = 0.5) +
-        scale_fill_manual(values=cbPalette) +
+        ggplot2::geom_bar(stat = "identity", width = 0.5) +
+        ggplot2::scale_fill_manual(values=cbPalette) +
         xlab("") +
         ylab("New Deaths Smoothed") +
-        ggtitle("") +
-        theme(legend.position = "none",
-              panel.background = element_rect(fill = "#ffffff00", color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00", color = "#ffffff00"))
+        ggplot2::ggtitle("") +
+        ggplot2::theme(legend.position = "none",
+              panel.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"),   # make plot background transparent
+              plot.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"))
 
       p3 %>% plotly::ggplotly(tooltip = "text")
 
@@ -1068,22 +1072,22 @@ run_tracker <- function() {
     output$comparator_barplot_death_pm <- plotly::renderPlotly({
 
       p4 <-  data3() %>%
-        ggplot(aes(x = reorder(location, -new_deaths_smoothed_per_million), # order bar plot by total vacc
+        ggplot2::ggplot(aes(x = stats::reorder(location, -new_deaths_smoothed_per_million), # order bar plot by total vacc
                    y = new_deaths_smoothed_per_million,
                    fill = input$country,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>New deaths smoothed per million:</b> ', new_deaths_smoothed_per_million,
                                 '</br><b>Date:</b> ', date))) +
-        geom_bar(stat = "identity", width = 0.5) +
-        scale_fill_manual(values=cbPalette) +
-        # coord_flip() +
-        # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+        ggplot2::geom_bar(stat = "identity", width = 0.5) +
+        ggplot2::scale_fill_manual(values=cbPalette) +
+        # coord_flihtmltools::p() +
+        # ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1))+
         xlab("") +
         ylab("New Deaths Smoothed per Million") +
-        ggtitle("") +
-        theme(legend.position = "none",
-              panel.background = element_rect(fill = "#ffffff00", color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00", color = "#ffffff00"))
+        ggplot2::ggtitle("") +
+        ggplot2::theme(legend.position = "none",
+              panel.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"),   # make plot background transparent
+              plot.background = ggplot2::element_rect(fill = "#ffffff00", color = "#ffffff00"))
 
       p4 %>% plotly::ggplotly(tooltip = "text")
 
@@ -1095,22 +1099,22 @@ run_tracker <- function() {
     output$comparator_barplot_cardio <- plotly::renderPlotly({
 
       p <-  data3() %>%
-        ggplot(
-          aes(x = reorder(location, -cardiovasc_death_rate), # reorder barplots
+        ggplot2::ggplot(
+          aes(x = stats::reorder(location, -cardiovasc_death_rate), # reorder barplots
               y = cardiovasc_death_rate,
               fill = input$country,
               text = paste('</br><b>Country:</b> ', location,
                            '</br><b>Cardiovascular Death Rate:</b> ', cardiovasc_death_rate,
                            '</br><b>Date:</b> ', date))) +
-        geom_bar(stat = "identity", width = 0.5) +
-        scale_fill_manual(values=cbPalette) +
+        ggplot2::geom_bar(stat = "identity", width = 0.5) +
+        ggplot2::scale_fill_manual(values=cbPalette) +
         xlab("") +
         ylab("Cardiovascular Death Rate") +
-        ggtitle("") +
-        theme(legend.position = "none",
-              panel.background = element_rect(fill = "#ffffff00",
+        ggplot2::ggtitle("") +
+        ggplot2::theme(legend.position = "none",
+              panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                               color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00",
+              plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                              color = "#ffffff00"))
 
       p %>% plotly::ggplotly(tooltip = "text")
@@ -1121,21 +1125,21 @@ run_tracker <- function() {
     output$comparator_barplot_diabetes <- plotly::renderPlotly({
 
       p <-  data3() %>%
-        ggplot(aes(x = reorder(location, -diabetes_prevalence), # reorder barplots
+        ggplot2::ggplot(aes(x = stats::reorder(location, -diabetes_prevalence), # reorder barplots
                    y = diabetes_prevalence,
                    fill = input$country,
                    text = paste('</br><b>Country:</b> ', location,
                                 '</br><b>Diabetes Prevalence:</b> ', diabetes_prevalence,
                                 '</br><b>Date:</b> ', date))) +
-        geom_bar(stat = "identity", width = 0.5) +
-        scale_fill_manual(values=cbPalette) +
+        ggplot2::geom_bar(stat = "identity", width = 0.5) +
+        ggplot2::scale_fill_manual(values=cbPalette) +
         xlab("") +
         ylab("Diabetes Prevalence") +
-        ggtitle("") +
-        theme(legend.position = "none",
-              panel.background = element_rect(fill = "#ffffff00",
+        ggplot2::ggtitle("") +
+        ggplot2::theme(legend.position = "none",
+              panel.background = ggplot2::element_rect(fill = "#ffffff00",
                                               color = "#ffffff00"),   # make plot background transparent
-              plot.background = element_rect(fill = "#ffffff00",
+              plot.background = ggplot2::element_rect(fill = "#ffffff00",
                                              color = "#ffffff00"))
 
       p %>% plotly::ggplotly(tooltip = "text")
@@ -1149,5 +1153,5 @@ run_tracker <- function() {
 
   ################ APPLICATION ##################
   # make app appear
-  shinyApp(ui = ui, server = server)
+  shiny::shinyApp(ui = ui, server = server)
 }
