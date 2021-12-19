@@ -2,6 +2,8 @@
 
 #' @title Eu covid19 tracker
 #'
+#' @description Function launching the application
+#'
 #' @author Aëllya & Laurène
 #'
 #' @return a shiny app for tracking covid19 in European countries
