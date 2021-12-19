@@ -1,5 +1,7 @@
 library(shiny)
 library(projectG1)
+
+
 # to round the number to K, M,...
 comprss <- function(tx) {
   div <- base::findInterval(base::as.numeric(base::gsub("\\,", "", tx)),
@@ -7,8 +9,11 @@ comprss <- function(tx) {
   base::paste(base::round( base::as.numeric(base::gsub("\\,","",tx))/10^(3*(div-1)), 2),
               c("","K","M","B","T")[div] )}
 
+
 # Separator of thousand function
 my_comma <- scales::label_comma(big.mark = "'", decimal.mark = ".")
+
+
 
 #-------------------------------------------------------------------------------
 # DATABASE
@@ -253,7 +258,7 @@ shinyServer(function(input, output, session) {
 
     # plot the map
     leaflet::leaflet(map_data) %>%
-      leaflet::addProviderTiles(providers$CartoDB.Positron) %>% #map display
+      leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) %>% #map display
       leaflet::addCircles(radius = ~sqrt(total_cases)*70, #add circles and its settings
                           color = ~pal(`people_fully_vaccinated_per_hundred`),
                           stroke = T,
