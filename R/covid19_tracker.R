@@ -59,7 +59,7 @@ run_tracker <- function() {
     dplyr::arrange(date) %>% #arrange by date
     dplyr::mutate(new_cases_smoothed = abs(new_cases_smoothed),
                   new_cases = abs(new_cases),
-                  new_cases_per_million = ab(new_cases_per_million),
+                  new_cases_per_million = abs(new_cases_per_million),
                   new_cases_smoothed_per_million = abs(new_cases_smoothed_per_million)) %>% #revise all the values to positive
     tidyr::fill(c(people_fully_vaccinated_per_hundred,
                   stringency_index,
