@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>European COVID-19 tracker</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="L. Hsieh, V. Jain, A. Monney, C. Schönholzer, R. Tombola (Group 1)" />
+    <meta name="date" content="2021-12-20" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+class: title-slide
+
+# European COVID-19 tracker 
+### Programming Tools in Data Science 
+#### December 20, 2021
+&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; 
+ 
+
+
+#### Group 1
+L. Hsieh, V. Jain, A. Monney,  C. Schönholzer, R. Tombola  
+
+---
+background-image: url(agenda.jpg)
+background-size: cover
+
+.title[
+Today's Agenda
+]
+
+&lt;style&gt;
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+---
+
+class: right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Why This App?
+]
+
+&lt;style&gt;
+.title {
+  font-size: 3.5em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+---
+
+# Why This App ?
+### Context
+* **COVID-19 pandemic** has been striking since **January 2020**
+* Severe **social and economics disruption** around the world
+* Mass **vaccination** campaigns began in **December 2020**
+&lt;br&gt;
+&lt;br&gt;
+
+### Goal
+
+
+* Create a useful **online interactive dashboard** to visualize the **epidemiological situation** of **European countries** due to COVID-19 and their **vaccination rate** 
+* Key statistics
+* User-friendly
+---
+class: right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Data
+]
+
+&lt;style&gt;
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+---
+# Data
+
+### Raw data
+| Topic | Source | Observations | Variables | Coverage | Frequency |
+|:------|:------|:-:|:--:|:-:|:-:|:-:|
+| COVID-19 | &lt;https://ourworldindata.org&gt; | &gt; 148k | 67 | 01.2020 to today| Daily |
+--
+
+### After cleaning
+| Topic | Source | Observations | Variables | Coverage | Frequency |
+|:------|:------|:-:|:--:|:-:|:-:|:-:|
+| COVID-19 | &lt;https://ourworldindata.org&gt; | **&gt; 29,8k** | **25** | 01.2020 to today| Daily |
+
+--
+.pull-left[
+* Data **not** always **updated daily** → NA's
+  &lt;p&gt;Solution: &lt;/p&gt;
+  * 7-day rolling average
+  * fill NA's with the last updated values
+]
+
+.pull-right[
+* Some observations in the new cases have **negative values**
+  &lt;p&gt;Solution: &lt;/p&gt;
+  * take absolute value
+]
+
+
+---
+class: up right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Our Website
+]
+
+&lt;style&gt;
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+
+---
+
+# Our Website 
+
+### The website embeds:
+* Video showcasing the shiny app
+* Vignette
+* Contacts
+* Github link
+
+
+#### Click *[here](https://ptdsg1.netlify.app)*  to access our website 
+
+---
+class: right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Limitations
+]
+
+&lt;style&gt;
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+
+---
+
+# Limitations
+
+### Data collection
+- Weekly collection
+- NA's
+
+### Reliability
+- Reported data is subject to significant **policy variation** between countries
+ - Reported number of **cases** 
+ - Reported number of **deaths**
+ - Full **vaccination** (2 or 3 doses?)
+
+---
+
+class: left
+background-image: url(https://media4.giphy.com/media/Mp4hQy51LjY6A/giphy.gif?cid=790b76113af446a0d6f3a280451beefacaaec7adc940fd5a&amp;rid=giphy.gif&amp;ct=g)
+background-size: cover
+
+
+
+.title[
+&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt;
+Thanks
+&lt;p&gt;For your attention!&lt;/p&gt;
+]
+
+&lt;style&gt;
+.title {
+  font-size: 3em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+
+
+
+.subtitle[
+
+Do you have any questions?
+]
+
+&lt;style&gt;
+.subtitle {
+  font-size: 2em;
+  font-family: Josefin sans;
+  color: white;
+}
+&lt;/style&gt;
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "arta",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,256 @@
+---
+title: "European COVID-19 tracker"
+subtitle: "Programming Tools in Data Science"
+author: "L. Hsieh, V. Jain, A. Monney,  C. Schönholzer, R. Tombola (Group 1)"
+institute: "HEC Lausanne"
+date: "December 20, 2021"
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    lib_dir: libs
+    nature:
+      highlightStyle: arta
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false
+---
+
+```{r setup, include = FALSE}
+options(htmltools.dir.version = FALSE)
+
+library(kableExtra)
+library(tidyverse)
+library(xaringanthemer)
+library(zoo)
+
+#kable options
+kable <- function(data, ...) {                                
+  knitr::kable(data, 
+               booktabs = TRUE, 
+               ...) %>% 
+    kable_styling(bootstrap_options =c("striped", "hover"), 
+                  full_width = T, 
+                  position = "left", 
+                  fixed_thead = T)
+}
+
+
+style_mono_accent(
+  base_color = "#1c3041",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google = google_font("Source Sans Pro", "300", "300i"),
+  code_font_google = google_font("Fira Mono")
+)
+```
+
+
+class: title-slide
+
+# European COVID-19 tracker 
+### Programming Tools in Data Science 
+#### December 20, 2021
+<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+ 
+
+
+#### Group 1
+L. Hsieh, V. Jain, A. Monney,  C. Schönholzer, R. Tombola  
+
+---
+background-image: url(agenda.jpg)
+background-size: cover
+
+.title[
+Today's Agenda
+]
+
+<style>
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+---
+
+class: right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Why This App?
+]
+
+<style>
+.title {
+  font-size: 3.5em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+---
+
+# Why This App ?
+### Context
+* **COVID-19 pandemic** has been striking since **January 2020**
+* Severe **social and economics disruption** around the world
+* Mass **vaccination** campaigns began in **December 2020**
+<br>
+<br>
+
+### Goal
+
+
+* Create a useful **online interactive dashboard** to visualize the **epidemiological situation** of **European countries** due to COVID-19 and their **vaccination rate** 
+* Key statistics
+* User-friendly
+---
+class: right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Data
+]
+
+<style>
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+---
+# Data
+
+### Raw data
+| Topic | Source | Observations | Variables | Coverage | Frequency |
+|:------|:------|:-:|:--:|:-:|:-:|:-:|
+| COVID-19 | <https://ourworldindata.org> | > 148k | 67 | 01.2020 to today| Daily |
+--
+
+### After cleaning
+| Topic | Source | Observations | Variables | Coverage | Frequency |
+|:------|:------|:-:|:--:|:-:|:-:|:-:|
+| COVID-19 | <https://ourworldindata.org> | **> 29,8k** | **25** | 01.2020 to today| Daily |
+
+--
+.pull-left[
+* Data **not** always **updated daily** → NA's
+  <p>Solution: </p>
+  * 7-day rolling average
+  * fill NA's with the last updated values
+]
+
+.pull-right[
+* Some observations in the new cases have **negative values**
+  <p>Solution: </p>
+  * take absolute value
+]
+
+
+---
+class: up right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Our Website
+]
+
+<style>
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+
+---
+
+# Our Website 
+
+### The website embeds:
+* Video showcasing the shiny app
+* Vignette
+* Contacts
+* Github link
+
+
+#### Click *[here](https://ptdsg1.netlify.app)*  to access our website 
+
+---
+class: right
+background-image: url(europe.jpg)
+background-size: cover
+
+.title[
+Limitations
+]
+
+<style>
+.title {
+  font-size: 4em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+
+---
+
+# Limitations
+
+### Data collection
+- Weekly collection
+- NA's
+
+### Reliability
+- Reported data is subject to significant **policy variation** between countries
+ - Reported number of **cases** 
+ - Reported number of **deaths**
+ - Full **vaccination** (2 or 3 doses?)
+
+---
+
+class: left
+background-image: url(https://media4.giphy.com/media/Mp4hQy51LjY6A/giphy.gif?cid=790b76113af446a0d6f3a280451beefacaaec7adc940fd5a&rid=giphy.gif&ct=g)
+background-size: cover
+
+
+
+.title[
+<br> <br> <br> <br>
+Thanks
+<p>For your attention!</p>
+]
+
+<style>
+.title {
+  font-size: 3em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+
+
+
+.subtitle[
+
+Do you have any questions?
+]
+
+<style>
+.subtitle {
+  font-size: 2em;
+  font-family: Josefin sans;
+  color: white;
+}
+</style>
+
+
